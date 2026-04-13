@@ -53,8 +53,14 @@ class Profile(models.Model):
     
     @property
     def full_name(self):
-        return f"{self.user.first_name}{self.user.last_name}"
+        return f"{self.user.first_name} {self.user.last_name}"
     
     @property
     def username(self):
         return self.user.username
+    
+    @property
+    def profile_picture_url(self):
+        if self.profile_picture:
+            return self.profile_picture.url
+        return '/static/photos/default.png'

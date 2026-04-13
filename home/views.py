@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 
 from .models import Post 
 from .forms import CreatePost, EditPost
-
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 # Create your views here.
 def homepage(request):
     posts = Post.objects.all()
@@ -67,6 +69,39 @@ def deletepost(request,id):
 
 def about(request):
     return render (request, 'home/about.html')
+
+def send_mail_view(request):
+    subject = 'Test Email'
+    message = 'this is a test email'
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = ['thapasaugat53@gmail.com']
+
+    send_mail(
+        subject,
+        message,
+        from_email,
+        recipient_list,
+        fail_silently=False,
+    )
+
+    return HttpResponse("email sent")
+
+def send_Html_template_mail_view(request):
+    subject = 'Test html email'
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = ['thapasaugat53@gmail.com']
+    html_message = render_to_string('home/email_template.html',{'username': 'Thanos'})
+    print(html_message)
+    send_mail(
+        subject,
+        '',
+        from_email,
+        recipient_list,
+        fail_silently=False,
+        html_message=html_message
+
+    )
+    return HttpResponse("Html mail sent")   
 
 
 
